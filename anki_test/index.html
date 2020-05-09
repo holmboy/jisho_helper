@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="jisho.css">
+<!-- <script src="jquery-3.5.0.min.js"></script> -->
+</head>
+<body>
+
+<div class="subcard"><div class=jp id="word">車</div></div>
+<div class="subcard" id="result"></div>
+
+<div style="float:center;margin:1em">
+	<a class='button' href="" onclick="">読</a>
+	<a class='button'  href="http://jisho.org/search/">漢字</a>
+	<a class='button'  href="http://jisho.org/search/{{kanji:Japanese Reading}}%23sentences">文</a>
+	</div>
+
+<script>
+
+	var JishoAPI = "http://kitsusan.synology.me:8080/?";
+	// var JishoAPI = "http://127.0.0.1:8080/?";
+
+	var vocabWord = document.getElementById("word").innerText;
+	var keyword = "keyword=" + vocabWord;
+
+	var jishoURL = JishoAPI + "keyword=" + encodeURIComponent(document.getElementById("word").innerText);
+	console.log(jishoURL);
+
+	var jishoRes;
+
+	var result = fetch(jishoURL)
+		.then(res => {return res.json()})
+		.then(json => {
+			resData = json["data"];
+			console.log(resData);
+			jishoRes = resData;
+
+			res1 = jishoRes[0]["senses"][0]["english_definitions"];
+		})
+		.catch(err => {console.log("error:"+err)});
+
+	// console.log("starting fetchJisho");
+	// async function fetchJisho(url) {
+	// 			var request = await fetch(url);
+	// 			var readRequest = await request.json();
+	// 			console.log(readRequest["data"]);
+	// 			// result = readRequest["data"];
+	// 			return readRequest["data"];
+	// 		}
+
+	jishoRes[0]["senses"][0]["english_definitions"].forEach(function(i){console.log(i)})
+
+	
+
+</script>
+
+</body>
