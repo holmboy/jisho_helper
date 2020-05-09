@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Jisho Test</title>
+  </head>
+  <body>
+    <input />
+    <button>Get Def</button>
+    <div />
+    <script>
+      const input = document.querySelector("input")
+      const div = document.querySelector("div")
+      const button = document.querySelector("button")
+
+      const fetchData = async (searchTerm) => {
+        const fetchJisho = await fetch(`http://localhost:8000/${searchTerm}`)
+
+        const parseJisho = await fetchJisho.json()
+
+        div.innerText = parseJisho.data[0].japanese[0].word
+      }
+
+      button.addEventListener("click", () => fetchData(input.value))
+    </script>
+  </body>
+</html>
