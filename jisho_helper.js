@@ -1,43 +1,30 @@
-const http = require('http');
-const https = require('https');
-const url = require('url');
-const fetch = require('node-fetch');
-//const Bluebird = require('bluebird');
+const express = require("express")()
+const fetch = require("node-fetch")
+const cors = require("cors")
 
-//fetch.Promise = Bluebird;
+express.use(cors())
 
-http.createServer(function (req, res) {
-	res.writeHead(200, {
-		'Content-Type': 'application/json',
-		'Access-Control-Allow-Origin': '*'
-	}); 
-	
-	console.log("request received");
+//sets up route, the :means that it will use whatever comes after as the search term i.e. /house
+express.get("/:lookup", async (req, res) => {
+  //parses the url object and stores the search term in a variable
+  const searchTerm = encodeURIComponent(req.params.lookup) 
+  console.log(searchTerm)
 
-	const queryObj = url.parse(req.url,true).query;
+  //hits the api with a template literal, which is a made with the addition of variables
+  const getjisho = await fetch(
+    `http://beta.jisho.org/api/v1/search/words?keyword=${searchTerm}`
+  )
 
-	var jishoUrl = 'http://beta.jisho.org/api/v1/search/words?keyword=' + queryObj['keyword'];
-	var jishoUrl = encodeURI(jishoUrl);
+  //parses fetched data
+  const parseJisho = await getjisho.json()
 
-	console.log(jishoUrl);
+  //sends data back to client as json
+  res.json(parseJisho)
+})
 
-	try{
-		fetch(jishoUrl)
-		.then((res) => {
-			console.log("received result");
-			return res.json()
-		})
-		.then((json) => {
-			console.log(json);
-			res.write(JSON.stringify(json));
-			res.end();
-		});
+//res.json(parseJisho.data[0].japanese)
 
-	}
-	catch(err) {
-		res.write({'error':'error'});
-		res.end();
-	}
- 
-	
-}).listen(8080);
+//sets express server to listen at port 8000
+express.listen(8000, (err) =>
+  console.log(err || "Node.js/Express Server Running")
+)
