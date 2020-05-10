@@ -1,43 +1,137 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="jisho.css">
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="jisho.css">
 </head>
+
 <body>
 
-<div class="subcard"><div class=jp id="word">車</div></div>
+	<div class="subcard">
+		<div class=jp id="word">教科書
+		</div>
+	</div>
 
-<div style="float:center;margin:1em">
-	<a id=yomi_button class='button'>読</a>
-	<a id=kanji_button class='button'>漢字</a>
-	<a id=bun_button class='button'>文</a>
-</div>
+	<div style="float:center;margin:1em">
+		<a id=yomi_button class='button'>読</a>
+		<a id=kanji_button class='button'>漢字</a>
+		<a id=bun_button class='button'>文</a>
+	</div>
 
-<div class="subcard" id="result"></div>
+	<div class="subcard" id="definitions">
+	</div>
 
-<script>
+	<script>
 
-	var JishoAPI = "http://kitsusan.synology.me:8080/?";
-	var JishoAPI = "http://localhost:8000/?";
+		var JishoAPI = "http://kitsusan.synology.me:8080/?";
+		var JishoAPI = "http://localhost:8000/?";
 
-	var vocabWord = document.getElementById("word").innerText;
+		var vocabWord = document.getElementById("word").innerText;
 
-	var jishoRes
+		// setup for sanity check when using console and bouncing function local var to this var
+		var testglobal
 
-	const fetchJisho = async (searchTerm) => {
+		// for console use as well.  why two?  I don't know
+		var jishoRes
 
-		const fetchJisho = await fetch(`http://localhost:8000/${searchTerm}`)
+		const fetchJisho = async (searchTerm) => {
+			//get json from jisho_helper.js
+			const fetchJisho = await fetch(`http://localhost:8000/${searchTerm}`)
 
-		const parseJisho = await fetchJisho.json()
+			// result to JSON format or Object
+			const parseJisho = await fetchJisho.json()
 
-		jishoRes = parseJisho["data"]
-	}
-	
-	document.addEventListener('DOMContentLoaded',()=>fetchJisho(vocabWord))
+			// for console use to check the structure of the data
+			jishoRes = parseJisho["data"]
+
+			// only working with first reuslt fo rnow
+			var jishoDef = jishoRes[0]
+			console.log(jishoDef) // console checking again
+
+			// for each part of the jisho result, create elements 
+			// in ways specific to that data.
+			// jisho def results going into the definitions div
+			for (const part in jishoDef) {
+
+				// also console sanity check
+				// console.log(`${part}: ${jishoDef[part]}`)
+
+				// grab that definitions div element
+				let reading_card = document.getElementById("definitions")
+
+				// create a div named slug with the value of slug
+				if (part == "slug") {
+					let partDiv = document.createElement("div")
+					partDiv.setAttribute("id", part)
+
+					// put in the slug value
+					partDiv.innerText = jishoDef[part]
+
+					// attach that guy to the definitions div
+					reading_card.appendChild(partDiv)
+				}
+				// if it is common, make the div
+				// would like this to be more like a badge or icon
+				// later
+				else if (part == "is_common") {
+
+					if (jishoDef[part] == true) {
+						// make div with id of json object part name
+						let partDiv = document.createElement("div")
+						partDiv.setAttribute("id", part)
+
+						partDiv.innerText = "common"
+
+						// slap it in to the definitions div
+						reading_card.appendChild(partDiv)
+					}
+				}
+				// japanese key has more going on
+				// drill down into the parts for each japanese def
+				// currently only handling the first one
+				else if (part == "japanese") {
+
+					// make the japanese div
+					let partDiv = document.createElement("div")
+					partDiv.setAttribute("id", part)
+					reading_card.appendChild(partDiv);
+					
+					// there can be more than one japanese def
+					// only handling the first one for now
+					let japanese_defs = jishoDef[part]
+					console.log(japanese_defs[0]) 
+					let japanese_def = japanese_defs[0]
+
+					// using that global to check things in the console
+					testglobal = japanese_defs[0]
+
+					for(let key in japanese_def){
+						console.log(japanese_def[key])
+						let japaneseSpan = document.createElement("span")
+						japaneseSpan.innerText = japanese_def[key]
+						japaneseSpan.setAttribute("id",key)
+						
+						document.getElementById(key).appendChild(japaneseSpan)
 
 
+					}
+				}
 
-</script>
+			}
+
+		}
+
+
+		document.addEventListener('DOMContentLoaded', () => fetchJisho(vocabWord))
+
+		function addListItem(item, list) {
+			const listItem = document.createElement("li")
+			const listContent = document.createTextNode(item)
+			listItem.appendChild(listContent)
+			list.appendChild(listItem)
+		}
+
+	</script>
 
 </body>
