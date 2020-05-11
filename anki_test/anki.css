@@ -1,0 +1,106 @@
+*{
+	margin:0;
+	padding:0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #222;
+	color: #EEE;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	min-height: 100vh;
+}
+
+.main-container{
+}
+
+.card {
+ font-size: 1.2rem;
+ text-align: center;
+ color: #fff;
+ background-color: #555;
+ min-height: 5vh;
+ display:flex;
+ justify-content: center;
+ align-content: center;
+ margin: 0.3rem;
+}
+
+.front{
+	font-size: 2rem;
+}
+
+.back{
+
+}
+
+.hide {
+	visibility: hidden;
+}
+
+
+.title {
+position: relative;
+bottom:1.1rem;
+left:1.5rem;
+font-size:0.75rem;
+margin:0rem
+}
+
+a {
+	color: orange;
+}
+
+a:hover {
+	color: yellow;
+}
+
+a:active {
+	color: white;
+}
+
+
+a.button {
+    background-color: yellowgreen;
+  box-shadow: 0 5px 0 green;
+  color: white;
+  padding: 0.5rem 1rem;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+font-weight: bold;
+margin: 0.1rem;
+border-radius:5px
+}
+
+a.button:hover {
+  background-color: yellowgreen;
+  cursor: pointer;
+}
+
+a.button:active {
+  box-shadow: none;
+  top: 5px;
+}
+
+.button-container {
+	display:flex;
+	justify-content: center;
+	align-content: center;
+}
+
+.chapter-badge { 
+	font-size: 0.8rem;
+	margin:0.5rem;
+	background-color:green;
+	width:1.1rem;
+	height:1.1rem;
+	position: relative;
+	text-align:center;
+	font-weight:bold;
+	border-radius: 10px
+}
+
+/* a:link, a:hover, a:visited, a:active { color: orange } */
+
+

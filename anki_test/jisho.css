@@ -1,98 +1,23 @@
-body {
-	background-color: #222;
-	color: #EEE;
+.jisho-defs{
+	margin: 0 rem;
+	display: flex;
+	align-items: normal;
+	justify-content: left;
+	flex-direction: column;
+	flex-wrap: wrap;
 }
 
+.j-def {
+	font-size: 1rem;
+	margin: 0.5rem 1rem;
+	background-color: #333;
+	border-radius: 0.4rem;
 
-.card {
- font-family: MS PGothic;
- font-size: 20px;
- text-align: center;
- color: #fff;
- background-color: #222;
 }
 
-.subcard{
-background-color: #555;
-box-shadow: 0 em 0.5em 0 #333;
-padding: 0.3em 0 0.7em 0;
-margin-bottom:0.5em;
-border-radius:5px
+.j-prop {
 }
 
-.title {
-position: relative;
-bottom:1.1em;
-left:1.5em;
-font-size:0.75em;
-margin:0em
+.japanese {
+	font-size: 1 rem;
 }
-
-a {
-	color: orange;
-}
-
-a:hover {
-	color: yellow;
-}
-
-a:active {
-	color: white;
-}
-
-
-a.button {
-    background-color: yellowgreen;
-  box-shadow: 0 5px 0 green;
-  color: white;
-  padding: 0.5em 1em;
-  position: relative;
-  text-decoration: none;
-  text-transform: uppercase;
-font-family: "MS PGothic";
-font-weight: ;
-margin:0.2em;
-border-radius:5px
-}
-
-a.button:hover {
-  background-color: yellowgreen;
-  cursor: pointer;
-}
-
-a.button:active {
-  box-shadow: none;
-  top: 5px;
-}
-
-.chapter-badge { 
-	font-size: 0.8em;
-	margin:0.5em;
-	background-color:green;
-	width:1.1em;
-	height:1.1em;
-	position: relative;
-	text-align:center;
-	font-weight:bold;
-	border-radius: 10px
-}
-
-/* a:link, a:hover, a:visited, a:active { color: orange } */
-
-.jp { font-size: 30px }
-.win .jp { font-family: "MS Mincho", "ＭＳ 明朝"; }
-.mac .jp { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro"; }
-.linux .jp { font-family: "TakaoPGothic"; }
-.mobile .jp { font-family: myfont;}
-.jpmid { font-size: 20px }
-.jpsmall { font-size: 16px }
-.win .jpmid { font-family: "MS Mincho", "ＭＳ 明朝"; }
-.mac .jpmid { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro"; }
-.linux .jpmid { font-family: "TakaoPGothic";}
-.mobile .jpmid { font-family: myfont; }
-.jptiny { font-size: 10px }
-.win .jptiny { font-family: "MS Mincho", "ＭＳ 明朝"; }
-.mac .jptiny { font-family: "Hiragino Mincho Pro", "ヒラギノ明朝 Pro"; }
-.linux .jptiny { font-family: "TakaoPGothic";}
-.mobile .jptiny { font-family: myfont; }
-@font-face { font-family: myfont; src: url('_TakaoPGothic.ttf'); }
