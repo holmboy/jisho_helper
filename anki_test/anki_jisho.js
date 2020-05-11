@@ -5,7 +5,7 @@ const bunButton = document.getElementById("bun-button")
 
 const cardFront = document.querySelector(".front")
 const cardRear = document.querySelector(".rear")
-const cardJishoDef = document.querySelector(".jisho-def")
+const cardJishoDef = document.querySelector(".jisho-defs")
 
 var JishoAPI = "http://kitsusan.synology.me:8080/?"
 var JishoAPI = "http://localhost:8000/?"
@@ -60,40 +60,66 @@ function makeDefCard(e) {
 
     // there are multiple matches, handle each
     for (def of jishoData) {
+        // new div for this definition data
         var newDiv = document.createElement("div")
         newDiv.classList.add("j-def")
+
         console.log(def)
         // each result has japanese, english (senses), jltp, is_commin, etc
         for (prop of Object.getOwnPropertyNames(def)) {
-            var propValue = def[prop]
-            // add a ul to the card for this property
 
+            var propValue = def[prop]
+
+            // div for each prop?
+            var propDiv = document.createElement("div")
+            propDiv.classList.add("j-prop")
+            propDiv.id = prop
             switch (prop) {
                 case "japanese":
+                    // add prop name to div
+                    propDiv.innerText = "Japanese"
+
                     // new UL for this property
-                        var newUl = document.createElement("ul")
-                        newUl.innerText = prop
-                        newUl.classList.add(prop)
-                        console.log(newUl)
+                    var newUl = document.createElement("ul")
+
                     // add each entry as an li
-                    for(japaneseDef of propValue){
+                    for (japaneseDef of propValue) {
+
+                        // new li with span
                         var newLi = document.createElement("li")
-                        newUl.appendChild(newLi) 
-                        newLi.innerHTML = `<span class="j-word">${japaneseDef["word"]}</span>`
+                        newUl.appendChild(newLi)
+                        newLi.innerHTML = `<span class="j-word">${japaneseDef["word"]} 【${japaneseDef["reading"]}】</span>`
                     }
-                    newDiv.appendChild(newUl)
+                    propDiv.appendChild(newUl)
                     break
+
                 case "is_common":
-                    console.log(def[prop])
+
                     break
+
                 case "jlpt":
-                    console.log(def[prop])
+
                     break
+
                 case "senses":
-                    console.log(def[prop])
+                    // add prop name to div
+                    propDiv.innerText = "English"
+
+                    // new UL for this property
+                    var newUl = document.createElement("ul")
+                
+                    // add each entry as an li
+                    for (engDef of propValue[0]["english_definitions"]) {
+                        var newLi = document.createElement("li")
+                        newUl.appendChild(newLi)
+                        newLi.innerHTML = JSON.stringify(engDef)
+                    }
+                    propDiv.appendChild(newUl)
+                    break
+                default:
                     break
             }
-            
+            newDiv.appendChild(propDiv)
         }
         cardJishoDef.appendChild(newDiv)
     }
