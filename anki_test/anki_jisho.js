@@ -51,7 +51,6 @@ function addListItem(item, list) {
 }
 
 function makeDefCard(e) {
-    console.log(e.target)
     let jishoData = jishoRes
 
     // make the div visible
@@ -64,63 +63,82 @@ function makeDefCard(e) {
         var newDiv = document.createElement("div")
         newDiv.classList.add("j-def")
 
-        console.log(def)
+        // console.log(def)
+
         // each result has japanese, english (senses), jltp, is_commin, etc
         for (prop of Object.getOwnPropertyNames(def)) {
-
             var propValue = def[prop]
+            console.log(JSON.stringify(propValue))
 
-            // div for each prop?
-            var propDiv = document.createElement("div")
-            propDiv.classList.add("j-prop")
-            propDiv.id = prop
-            switch (prop) {
-                case "japanese":
-                    // add prop name to div
-                    propDiv.innerText = "Japanese"
+            if (JSON.stringify(propValue) !== "{}" || JSON.stringify(propValue) !== "[]" || propValue === false ) {
 
-                    // new UL for this property
-                    var newUl = document.createElement("ul")
+                // console.log(`${prop}: ${propValue}`)
 
-                    // add each entry as an li
-                    for (japaneseDef of propValue) {
+                // div for each prop?
+                var propDiv = document.createElement("div")
+                propDiv.classList.add("j-prop")
+                switch (prop) {
+                    case "japanese":
+                        var jpDiv = newJapaneseDiv(propValue)
+                        propDiv.appendChild(jpDiv)
+                        break
 
-                        // new li with span
-                        var newLi = document.createElement("li")
-                        newUl.appendChild(newLi)
-                        newLi.innerHTML = `<span class="j-word">${japaneseDef["word"]} 【${japaneseDef["reading"]}】</span>`
-                    }
-                    propDiv.appendChild(newUl)
-                    break
+                    case "is_common":
 
-                case "is_common":
+                        break
 
-                    break
+                    case "jlpt":
+                        var jlptDiv = newJlptDiv(propValue)
+                        propDiv.appendChild(jlptDiv)
 
-                case "jlpt":
+                        break
 
-                    break
-
-                case "senses":
-                    // add prop name to div
-                    propDiv.innerText = "English"
-
-                    // new UL for this property
-                    var newUl = document.createElement("ul")
-                
-                    // add each entry as an li
-                    for (engDef of propValue[0]["english_definitions"]) {
-                        var newLi = document.createElement("li")
-                        newUl.appendChild(newLi)
-                        newLi.innerHTML = JSON.stringify(engDef)
-                    }
-                    propDiv.appendChild(newUl)
-                    break
-                default:
-                    break
+                    case "senses":
+                        var engDiv = newEnglishDiv(propValue)
+                        propDiv.appendChild(engDiv)
+                        break
+                    default:
+                        break
+                }
+                newDiv.appendChild(propDiv)
             }
-            newDiv.appendChild(propDiv)
         }
         cardJishoDef.appendChild(newDiv)
     }
+}
+
+function newJapaneseDiv(japaneseObject) {
+    var newDiv = document.createElement("div")
+    newDiv.classList.add("j-word")
+
+    // add each entry as an li
+    for (japaneseDef of japaneseObject) {
+        newDiv.innerHTML += `<span>${japaneseDef["word"]}【${japaneseDef["reading"]}】</span><br />`
+    }
+    return (newDiv)
+}
+
+function newEnglishDiv(sensesObject) {
+
+    var newDiv = document.createElement("div")
+    newDiv.classList.add("eng-word")
+
+    var newSpan = document.createElement("span")
+    newSpan.innerText = sensesObject[0]["english_definitions"].join(", ")
+
+    newDiv.appendChild(newSpan)
+
+    return (newDiv)
+}
+
+function newJlptDiv(jlptObject){
+    var newDiv = document.createElement("div")
+    newDiv.classList.add("jlpt")
+
+    var newSpan = document.createElement("span")
+    newSpan.innerText = jlptObject.join("; ")
+
+    newDiv.appendChild(newSpan)
+
+    return(newDiv)
 }

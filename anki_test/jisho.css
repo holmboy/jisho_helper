@@ -12,12 +12,16 @@
 	margin: 0.5rem 1rem;
 	background-color: #333;
 	border-radius: 0.4rem;
+	display: flex;
+	padding:0.25rem;
 
 }
 
 .j-prop {
+	padding: 0.25rem 0.35rem;
+	max-width: 30rem;
 }
 
 .japanese {
-	font-size: 1 rem;
+	font-size: 1rem;
 }
