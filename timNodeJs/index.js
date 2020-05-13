@@ -14,7 +14,7 @@ express.get("/:lookup", async (req, res) => {
   const getjisho = await fetch(
     `http://beta.jisho.org/api/v1/search/words?keyword=${searchTerm}`
   )
-
+  
   //parses fetched data
   const parseJisho = await getjisho.json()
 

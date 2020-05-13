@@ -41,6 +41,11 @@ body {
 	transition: 0.3s ease;
 }
 
+.show {
+	visibility: visible;
+	opacity: 100;
+	transition: 0.3s ease;
+}
 
 .title {
 position: relative;

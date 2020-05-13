@@ -1,20 +1,21 @@
-.jisho-defs{
+.jisho-defs {
 	margin: 0 rem;
 	display: flex;
 	align-items: normal;
-	justify-content: left;
-	flex-direction: column;
-	flex-wrap: wrap;
 }
 
-.j-def {
+.j-defs {
 	font-size: 1rem;
 	margin: 0.5rem 1rem;
 	background-color: #333;
 	border-radius: 0.4rem;
-	display: flex;
-	padding:0.25rem;
+	padding: 0.25rem;
+	list-style-position: inside;
+	display: block;
+}
 
+.j-def {
+	margin: .4rem 0rem 0.4rem 0rem;
 }
 
 .j-prop {
@@ -22,6 +23,27 @@
 	max-width: 30rem;
 }
 
+.j-word {
+	min-width: 10rem;
+}
+
 .japanese {
 	font-size: 1rem;
+}
+
+.eng-word {}
+
+span.part-of-speech, span.tags {
+	font-size: 0.8rem;
+	font-style: italic;
+	padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+	margin-left: 0.6rem;
+	margin-right: 0.6rem;
+	border-radius: 0.15rem;
+	background-color: #ca7;
+	color: #222;
+}
+
+.common {
+	background-color: #004466
 }

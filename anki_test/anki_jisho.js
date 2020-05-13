@@ -14,40 +14,31 @@ var frontWord = cardFront.innerText
 // setup for sanity check when using console and bouncing function local var to this var
 var testglobal
 
-// for console use as well.  why two?  I don't know
+// set to receive fetchJisho()'s 'data' object
+// can't figure out how to just return 'data' object
+//  via return()
 var jishoRes
 
 // EVENT LISTENERS
 document.addEventListener('DOMContentLoaded', fetchJisho(frontWord))
 yomiButton.addEventListener("click", makeDefCard)
 
-
+// get jisho.org API data via node.js proxy
 async function fetchJisho(searchTerm) {
     //get json from jisho_helper.js
     const response = await fetch(`http://localhost:8000/${searchTerm}`)
 
-    // result to JSON format or Object
+    // result to JSON
     const parseJisho = await response.json()
 
-    // for console use to check the structure of the data
+    // get just the 'data' object
     json = await parseJisho["data"]
 
+    // place 'data' object to global var
     jishoRes = json
     console.log("jisho data is received")
 
     return (parseJisho["data"]) // but return to where?  no clue
-
-    // because I cannot figure out how to use the results of this
-    // promise outside of the async function, I guess all
-    // work that uses the fetch result must stay here.
-
-}
-
-function addListItem(item, list) {
-    const listItem = document.createElement("li")
-    const listContent = document.createTextNode(item)
-    listItem.appendChild(listContent)
-    list.appendChild(listItem)
 }
 
 function makeDefCard(e) {
@@ -57,88 +48,90 @@ function makeDefCard(e) {
     cardJishoDef.classList.toggle("hide")
     // console.log(jishoData[0])
 
+    // new div for this definition data
+    var defList = document.createElement("ul")
+    defList.classList.add("j-defs")
+
     // there are multiple matches, handle each
     for (def of jishoData) {
-        // new div for this definition data
-        var newDiv = document.createElement("div")
-        newDiv.classList.add("j-def")
 
-        // console.log(def)
+        console.log(def)
 
-        // each result has japanese, english (senses), jltp, is_commin, etc
-        for (prop of Object.getOwnPropertyNames(def)) {
-            var propValue = def[prop]
-            console.log(JSON.stringify(propValue))
+        // new list item for this def
+        var defListItem = document.createElement("li")
+        defListItem.classList.add("j-def")
 
-            if (JSON.stringify(propValue) !== "{}" || JSON.stringify(propValue) !== "[]" || propValue === false ) {
-
-                // console.log(`${prop}: ${propValue}`)
-
-                // div for each prop?
-                var propDiv = document.createElement("div")
-                propDiv.classList.add("j-prop")
-                switch (prop) {
-                    case "japanese":
-                        var jpDiv = newJapaneseDiv(propValue)
-                        propDiv.appendChild(jpDiv)
-                        break
-
-                    case "is_common":
-
-                        break
-
-                    case "jlpt":
-                        var jlptDiv = newJlptDiv(propValue)
-                        propDiv.appendChild(jlptDiv)
-
-                        break
-
-                    case "senses":
-                        var engDiv = newEnglishDiv(propValue)
-                        propDiv.appendChild(engDiv)
-                        break
-                    default:
-                        break
-                }
-                newDiv.appendChild(propDiv)
-            }
+        // for is_common, add class to defList of 'common'
+        if (def["is_common"] === true) {
+            defListItem.classList.add("common")
         }
-        cardJishoDef.appendChild(newDiv)
+        // for japanese array, append a div with japanese info via function
+        defListItem.appendChild(newJapaneseSpan(def["japanese"]))
+
+        // for senses array, which holds the english_definitions
+        defListItem.appendChild(newEngSpan(def["senses"]))
+
+        // if there is anything in the 'tags' array
+        if (def["tags"].length > 0) {
+            let tagsSpan = document.createElement("span")
+            tagsSpan.classList.add("tags")
+            tagsSpan.innerText = def["tags"].join(", ")
+            // append to newDiv
+            defListItem.appendChild(tagsSpan)
+        }
+        defList.appendChild(defListItem)
     }
+    // the definition div is complete!  append to the jisho 'card'
+    cardJishoDef.appendChild(defList)
+
 }
 
-function newJapaneseDiv(japaneseObject) {
-    var newDiv = document.createElement("div")
-    newDiv.classList.add("j-word")
+function newJapaneseSpan(japaneseArray) {
+    // new div, class 'j-word'
+    var newSpan = document.createElement("span")
+    newSpan.classList.add("j-word")
 
     // add each entry as an li
-    for (japaneseDef of japaneseObject) {
-        newDiv.innerHTML += `<span>${japaneseDef["word"]}【${japaneseDef["reading"]}】</span><br />`
+    for (japaneseDef of japaneseArray) {
+        // via the innerHTML approach to spice things up
+        newSpan.innerHTML += `<span>${japaneseDef["word"]}【${japaneseDef["reading"]}】</span>`
     }
-    return (newDiv)
+
+    return (newSpan)
 }
 
-function newEnglishDiv(sensesObject) {
-
-    var newDiv = document.createElement("div")
-    newDiv.classList.add("eng-word")
-
+function newEngSpan(sensesArray) {
+    // new div with 'eng-word' class added
     var newSpan = document.createElement("span")
-    newSpan.innerText = sensesObject[0]["english_definitions"].join(", ")
+    newSpan.classList.add("eng-word")
+    // just going to work with first senses object for now
+    let sensesObject = sensesArray[0]
+    // new span because I don't understand when to use spans
+    var englishSpan = document.createElement("span")
+    englishSpan.innerText = sensesObject["english_definitions"].join(", ")
+    englishSpan.classList.add("eng-word")
+    // put the span in the div
+    newSpan.appendChild(englishSpan)
 
-    newDiv.appendChild(newSpan)
+    // if there is anything in the parts_of_speech property
+    // tack it on to the english div or span or whatever
+    if (sensesObject["parts_of_speech"].length > 0) {
+        let partOfSpeechSpan = document.createElement("span")
+        partOfSpeechSpan.classList.add("part-of-speech")
+        partOfSpeechSpan.innerText = sensesObject["parts_of_speech"].join(", ")
+        // append to newSpan
+        newSpan.appendChild(partOfSpeechSpan)
+    }
 
-    return (newDiv)
+    return (newSpan)
 }
 
-function newJlptDiv(jlptObject){
-    var newDiv = document.createElement("div")
-    newDiv.classList.add("jlpt")
+function newJlptLi(jlptObject) {
+    // new span of class 'jlpt'
+    var jlptSpan = document.createElement("span")
+    jlptSpan.classList.add("jlpt")
+    // break down jlpt object/array to single comma separated string
+    jlpt.innerText = jlptObject.join("; ")
 
-    var newSpan = document.createElement("span")
-    newSpan.innerText = jlptObject.join("; ")
-
-    newDiv.appendChild(newSpan)
-
-    return(newDiv)
+    return (jlptSpan)
 }
